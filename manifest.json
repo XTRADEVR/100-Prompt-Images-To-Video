@@ -1,9 +1,21 @@
 {
-  "name": "100 AI Image to Video Prompts",
-  "short_name": "AI Video",
-  "start_url": ".",
+  "name": "AI Video Prompts Hub",
+  "short_name": "VideoPrompts",
+  "description": "Perpustakaan 100 AI Image-to-Video Prompts profesional dengan mode offline PWA.",
+  "start_url": "/",
   "display": "standalone",
-  "background_color": "#070a14",
-  "theme_color": "#7c6cff",
-  "icons": [{"src": "https://cdn-icons-png.flaticon.com/512/3950/3950811.png","sizes": "512x512","type": "image/png"}]
+  "background_color": "#0f172a",
+  "theme_color": "#6366f1",
+  "icons": [
+    {
+      "src": "https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?w=192&h=192&fit=crop",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?w=512&h=512&fit=crop",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
 }
