@@ -1,0 +1,9 @@
+{
+  "name": "100 AI Image to Video Prompts",
+  "short_name": "AI Video",
+  "start_url": ".",
+  "display": "standalone",
+  "background_color": "#070a14",
+  "theme_color": "#7c6cff",
+  "icons": [{"src": "https://cdn-icons-png.flaticon.com/512/3950/3950811.png","sizes": "512x512","type": "image/png"}]
+}
