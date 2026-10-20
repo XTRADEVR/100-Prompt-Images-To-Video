@@ -1,18 +1,356 @@
 <!doctype html>
-<html lang="en">
+<html lang="id" class="dark">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>100 AI Image-to-Video Prompts Library</title>
-    <meta name="description" content="A comprehensive, interactive library of 100 professional AI image-to-video prompts across 10 categories with search, filters, copy-to-clipboard, bookmarks, and Gemini AI prompt enhancement." />
-    <meta property="og:title" content="100 AI Image-to-Video Prompts Library" />
-    <meta property="og:description" content="A comprehensive, interactive library of 100 professional AI image-to-video prompts across 10 categories with search, filters, copy-to-clipboard, bookmarks, and Gemini AI prompt enhancement." />
-    <meta property="og:type" content="website" />
-    <meta name="twitter:card" content="summary_large_image" />
+    <title>AI Video Prompts Hub - 100 Professional AI Image-to-Video Prompts</title>
+    <meta name="description" content="Perpustakaan 100 AI Image-to-Video Prompts profesional dengan 10 kategori, pencarian real-time, dan PWA offline support." />
+    <link rel="manifest" href="/manifest.json" />
+    <meta name="theme-color" content="#6366f1" />
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+      @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+      body { font-family: 'Inter', sans-serif; }
+    </style>
   </head>
-  <body>
-    <div id="root"></div>
-    <script type="module" src="/src/main.tsx"></script>
-  </body>
-</html>
+  <body class="bg-[#0f172a] text-slate-100 min-h-screen selection:bg-indigo-600 selection:text-white">
 
+    <!-- Ambient Glow Background -->
+    <div class="fixed inset-0 pointer-events-none overflow-hidden z-0">
+      <div class="absolute -top-40 -left-40 w-96 h-96 bg-indigo-600/15 rounded-full blur-[120px]"></div>
+      <div class="absolute top-1/3 -right-40 w-96 h-96 bg-purple-600/15 rounded-full blur-[120px]"></div>
+    </div>
+
+    <!-- Header -->
+    <header class="relative z-10 border-b border-slate-800 bg-[#0f172a]/80 backdrop-blur-xl sticky top-0">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
+        <div class="flex items-center gap-3">
+          <div class="w-11 h-11 rounded-xl bg-gradient-to-tr from-indigo-600 to-purple-600 flex items-center justify-center shadow-lg shadow-indigo-500/25">
+            <i class="fa-solid fa-clapperboard text-white text-xl"></i>
+          </div>
+          <div>
+            <h1 class="text-xl sm:text-2xl font-black tracking-tight text-white">
+              AI Video Prompts Hub
+            </h1>
+            <p class="text-xs text-slate-400">100 Professional AI Image-to-Video Prompts Library</p>
+          </div>
+        </div>
+        <div class="flex items-center gap-3">
+          <span class="hidden sm:inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 text-xs font-semibold">
+            <i class="fa-solid fa-bolt text-[10px]"></i> PWA Ready
+          </span>
+        </div>
+      </div>
+    </header>
+
+    <!-- Main Section -->
+    <main class="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      
+      <!-- Hero Banner -->
+      <div class="mb-8 bg-gradient-to-r from-indigo-950/50 via-purple-950/30 to-slate-900 border border-indigo-500/20 rounded-2xl p-6 sm:p-8 shadow-2xl">
+        <div class="max-w-3xl">
+          <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-indigo-500/15 border border-indigo-500/30 text-indigo-300 text-xs font-semibold mb-3">
+            <i class="fa-solid fa-fire text-yellow-400"></i> Kategori Lengkap & Siap Pakai
+          </span>
+          <h2 class="text-2xl sm:text-4xl font-extrabold tracking-tight text-white mb-3">
+            Koleksi Prompt Video AI Terbaik untuk Kreator
+          </h2>
+          <p class="text-slate-300 text-sm sm:text-base leading-relaxed">
+            Salin prompt sinematik berkualitas tinggi untuk Runway Gen-3, Sora, Luma Dream Machine, Pika, dan Kling. Akses offline penuh via PWA.
+          </p>
+        </div>
+      </div>
+
+      <!-- Search Bar -->
+      <div class="mb-6">
+        <div class="relative max-w-xl">
+          <i class="fa-solid fa-magnifying-glass absolute left-4 top-1/2 -translate-y-1/2 text-slate-400"></i>
+          <input
+            type="text"
+            id="search-input"
+            placeholder="Cari prompt berdasarkan judul, kata kunci, atau gaya..."
+            class="w-full bg-slate-900/90 border border-slate-800 rounded-xl pl-12 pr-4 py-3.5 text-sm text-white placeholder-slate-500 focus:outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 shadow-inner transition-all"
+          >
+        </div>
+      </div>
+
+      <!-- Category Filter Pills -->
+      <div id="category-filters" class="flex items-center gap-2 overflow-x-auto pb-4 mb-6 scrollbar-none"></div>
+
+      <!-- Counter -->
+      <div class="flex items-center justify-between mb-6 text-xs text-slate-400">
+        <div id="result-counter">Menampilkan 100 prompt</div>
+      </div>
+
+      <!-- Prompts Grid -->
+      <div id="prompts-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"></div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="relative z-10 border-t border-slate-800 bg-slate-950 mt-20 py-8 text-center text-xs text-slate-500">
+      <p>© 2026 AI Video Prompts Hub. Progressive Web App Ready.</p>
+    </footer>
+
+    <!-- Toast Notification -->
+    <div id="toast" class="fixed bottom-6 right-6 z-50 bg-indigo-600 text-white px-5 py-3 rounded-xl shadow-2xl flex items-center gap-3 border border-indigo-400/30 transform translate-y-32 opacity-0 transition-all duration-300">
+      <i class="fa-solid fa-circle-check text-emerald-300"></i>
+      <span id="toast-msg" class="font-medium text-sm">Prompt berhasil disalin!</span>
+    </div>
+
+    <!-- Application Script -->
+    <script>
+      const CATEGORIES = ["Semua", "Sinematik", "Alam", "Sci-Fi", "Makanan", "Hewan", "Potret", "Kendaraan", "Abstrak", "Arsitektur", "Animasi"];
+
+      const PROMPTS = [
+        // --- SINEMATIK (1-10) ---
+        { id: 1, cat: "Sinematik", title: "Cinematic Desert Caravan", prompt: "An epic cinematic drone shot tracking a lone camel caravan traversing massive golden sand dunes in the Sahara desert during sunset, dramatic long shadows, wind blowing sand particles across the lens, 8k resolution, photorealistic." },
+        { id: 2, cat: "Sinematik", title: "Rainy Neo-Noir Alleyway", prompt: "A moody neo-noir detective walking down a narrow alleyway in 1940s New York during a heavy downpour, neon signs reflecting in puddles, cinematic fog, slow motion rain drops, dramatic anamorphic lens flare." },
+        { id: 3, cat: "Sinematik", title: "Epic Mountain Peak Sunrise", prompt: "Breathtaking timelapse of sunrise over snow-capped Himalayan peaks, clouds flowing like a waterfall through the valleys below, first rays of sun hitting the golden summit peaks, majestic scale." },
+        { id: 4, cat: "Sinematik", title: "Royal Palace Ballroom Waltz", prompt: "An opulent 18th-century European royal ballroom filled with aristocrats dancing in elegant gowns and tuxedos, glittering crystal chandeliers overhead, camera gliding smoothly through the crowd, warm candlelight." },
+        { id: 5, cat: "Sinematik", title: "Underwater Shipwreck Discovery", prompt: "Deep sea deep-dive exploration revealing a colossal sunken pirate galleon covered in glowing bioluminescent coral and schools of silver fish swirling around the mast, cinematic volumetric rays of light from above." },
+        { id: 6, cat: "Sinematik", title: "Formula 1 Night Race Speed", prompt: "High-speed panning shot of a Formula 1 racing car tearing around a wet street circuit under brilliant floodlights at night, sparks flying from the underbody scraping the tarmac, water spray kicking up from tires." },
+        { id: 7, cat: "Sinematik", title: "Medieval Castle Siege Battle", prompt: "Epic cinematic wide shot of a medieval fortress under siege at night, catapults launching flaming boulders into the dark sky, armies clashing with clanging steel and fiery torches, dramatic war atmosphere." },
+        { id: 8, cat: "Sinematik", title: "Steampunk Airship Docking", prompt: "A massive Victorian steampunk airship slowly docking at a towering iron skyscraper station billowing steam, gear mechanisms turning, bustling Victorian passengers on observation decks, golden hour haze." },
+        { id: 9, cat: "Sinematik", title: "Ghostly Forest Fog Spirit", prompt: "An ethereal glowing white deer walking through an ancient mossy forest covered in thick mystical morning fog, glowing fireflies dancing around its antlers, cinematic slow motion, mystical fantasy atmosphere." },
+        { id: 10, cat: "Sinematik", title: "Neon Cyberpunk Motorcycle Chase", prompt: "Thrilling chase scene of a futuristic biker speeding through a neon-lit Tokyo highway on a sleek lightcycle, dynamic camera angles, rain splashing on camera lens, hyper-realistic reflections." },
+
+        // --- ALAM (11-20) ---
+        { id: 11, cat: "Alam", title: "Majestic Waterfall in Jungle", prompt: "Crystal clear water cascading down a lush green mossy cliff into a tranquil turquoise pool in a primeval jungle, gentle mist rising, sunbeams piercing through the dense rainforest canopy, tranquil natural beauty." },
+        { id: 12, cat: "Alam", title: "Aurora Borealis Arctic Fjord", prompt: "Vibrant green and purple Aurora Borealis dancing across a starry night sky, reflecting perfectly in the icy mirror-like water of a Norwegian fjord, snow-covered mountains framing the horizon, majestic slow wave motion." },
+        { id: 13, cat: "Alam", title: "Volcanic Eruption Lava Flow", prompt: "Dramatically glowing molten lava river flowing down a volcanic mountain slope at night, glowing orange and red against dark volcanic rock, smoke billowing into the starry sky, intense thermal heat distortion." },
+        { id: 14, cat: "Alam", title: "Ocean Wave Crashing Cliff", prompt: "Massive deep blue ocean wave crashing dramatically against rugged black basalt sea cliffs, exploding into white sea foam and mist flying toward the camera in super slow motion, powerful natural force." },
+        { id: 15, cat: "Alam", title: "Blooming Sakura Spring", prompt: "Close-up macro shot of delicate pink cherry blossom sakura petals gently blooming in spring breeze, soft focus background of traditional Japanese temple garden, falling petals swirling in the air." },
+        { id: 16, cat: "Alam", title: "Lavender Fields Provence", prompt: "Endless rolling purple lavender fields in Provence France swaying gently in the summer breeze, a rustic stone farmhouse in the background, golden sunlight filtering through afternoon haze, honeybees buzzing." },
+        { id: 17, cat: "Alam", title: "Autumn Forest Golden Leaves", prompt: "A serene forest path covered in crisp golden orange autumn leaves, gentle wind blowing golden leaves falling from towering maple trees, warm sunbeams creating dappled light on the forest floor." },
+        { id: 18, cat: "Alam", title: "Milky Way Desert Night", prompt: "Stunning timelapse of the Milky Way galaxy rotating across the crystal clear night sky over ancient rock formations in Monument Valley, shooting stars streaking across the cosmos, glowing starlight." },
+        { id: 19, cat: "Alam", title: "Bamboo Forest Green Sunbeams", prompt: "A serene walk through a towering green Arashiyama bamboo forest in Kyoto, tall bamboo stalks swaying gently in the wind, dramatic sunbeams filtering down through the dense bamboo canopy." },
+        { id: 20, cat: "Alam", title: "Glacier Ice Cave Blue Light", prompt: "Inside a breathtaking translucent blue glacier ice cave in Iceland, sunlight filtering through thick ancient blue ice, melting water droplets falling into a crystal stream." },
+
+        // --- SCI-FI (21-30) ---
+        { id: 21, cat: "Sci-Fi", title: "Futuristic Megacity Flying Cars", prompt: "A towering vertical cyberpunk megacity in the year 3024 with holographic advertisements the size of skyscrapers, flying cars zipping through aerial traffic lanes, glowing neon highways, cinematic sci-fi aesthetic." },
+        { id: 22, cat: "Sci-Fi", title: "Alien Bioluminescent Jungle", prompt: "Exploring an alien exoplanet jungle at night with bizarre glowing flora, floating purple spores in the air, giant ringed gas giant planet visible in the starry night sky, mysterious and otherworldly." },
+        { id: 23, cat: "Sci-Fi", title: "Cyborg Robotic Workshop", prompt: "Intricate close-up of a high-tech robotic android arm being meticulously repaired by a robotic laser welder in a sterile futuristic cleanroom, sparks flying, microscopic mechanical gears turning with precision." },
+        { id: 24, cat: "Sci-Fi", title: "Spaceship Launch Stratosphere", prompt: "Massive interplanetary spaceship launching from a desert launchpad with thunderous force, massive plumes of white steam and fiery rocket thrusters blasting off into the stratosphere, dramatic low angle view." },
+        { id: 25, cat: "Sci-Fi", title: "Quantum Supercomputer Core", prompt: "Inside a quantum supercomputer core with glowing blue laser beams pulsing through intricate glass conduits and floating holographic data matrices spinning in zero gravity, futuristic high-tech laboratory." },
+        { id: 26, cat: "Sci-Fi", title: "Mars Rover Red Plains", prompt: "A sophisticated robotic rover traversing the barren red dust plains of Mars, camera panning to reveal a massive canyon and distant futuristic habitat dome under a pink Martian sky." },
+        { id: 27, cat: "Sci-Fi", title: "Interdimensional Portal Vortex", prompt: "A swirling vortex of energy opening up in the middle of a laboratory, tearing fabric of space-time with crackling blue lightning and revealing glimpses of a glowing alien dimension beyond, cinematic VFX." },
+        { id: 28, cat: "Sci-Fi", title: "Floating Sky Islands Pandora", prompt: "Epic cinematic shot of massive islands floating in the sky with cascading waterfalls plunging into the mist below, flock of dragon-like creatures flying between the peaks, magical sci-fi world." },
+        { id: 29, cat: "Sci-Fi", title: "Cybernetic Neural HUD Eye", prompt: "Close-up of a human eye with glowing cybernetic HUD graphics reflecting in the cornea, data streams scrolling rapidly across the vision, futuristic cyberpunk augmentations." },
+        { id: 30, cat: "Sci-Fi", title: "Dyson Sphere Megastructure", prompt: "A colossal Dyson Sphere megastructure partially surrounding a burning star, capturing stellar energy with intricate solar sail panels, vast cosmic scale, breathtaking science fiction masterpiece." },
+
+        // --- MAKANAN (31-40) ---
+        { id: 31, cat: "Makanan", title: "Gourmet Burger Assembly", prompt: "Mouth-watering slow motion commercial shot of a gourmet cheeseburger ingredients dropping and assembling in mid-air: toasted brioche bun, juicy beef patty, melted cheddar, crisp lettuce, gourmet food ad." },
+        { id: 32, cat: "Makanan", title: "Artisanal Coffee Pour Over", prompt: "Close-up macro commercial shot of hot water being poured from a copper kettle over freshly ground coffee beans in a ceramic dripper, rich dark coffee blooming, slow motion aromatic steam." },
+        { id: 33, cat: "Makanan", title: "Italian Pizza Cheese Stretch", prompt: "Freshly baked authentic wood-fired Neapolitan pizza being pulled apart, showing long gooey strands of melted mozzarella cheese, rising aromatic steam, macro cinematic food videography." },
+        { id: 34, cat: "Makanan", title: "Japanese Ramen Steam Bowl", prompt: "A steaming hot bowl of authentic Japanese tonkotsu ramen with chashu pork, soft-boiled ajituke tamago egg, and nori, steam rising gracefully in warm lighting, cinematic food aesthetic." },
+        { id: 35, cat: "Makanan", title: "Chocolate Lava Cake Slice", prompt: "A decadent warm chocolate lava cake being sliced open with a silver spoon, rich warm dark chocolate flowing out slowly onto a ceramic plate, macro food styling." },
+        { id: 36, cat: "Makanan", title: "Fresh Sushi Platter Art", prompt: "Exquisite Japanese sushi and sashimi platter prepared by a master chef, fresh salmon and tuna nigiri glistening under soft overhead restaurant lighting, macro cinematic shot." },
+        { id: 37, cat: "Makanan", title: "Sparkling Berry Smoothie", prompt: "Vibrant mixed berry smoothie in a glass with fresh mint leaves and strawberries on top, condensation dripping down the glass in slow motion, bright refreshing summer commercial." },
+        { id: 38, cat: "Makanan", title: "Fluffy Croissant Baking", prompt: "Golden brown flaky French croissants fresh out of the oven resting on a baker's rack, dusting of flour floating in soft morning sunlight, artisanal bakery commercial." },
+        { id: 39, cat: "Makanan", title: "Juicy Steak Sizzling Grill", prompt: "A thick premium ribeye steak sizzling on a hot cast iron grill with butter and rosemary melting on top, sparks and smoke rising in slow motion, premium culinary video." },
+        { id: 40, cat: "Makanan", title: "Colorful Macaron Tower", prompt: "An elegant French macaron tower featuring pastel pink, pistachio green, and lavender cookies, soft macro focus with shallow depth of field, luxury pastry showcase." },
+
+        // --- HEWAN (41-50) ---
+        { id: 41, cat: "Hewan", title: "African Savanna Elephant Herd", prompt: "A majestic herd of African elephants walking gracefully across the open savanna grass during golden hour sunset, dust kicking up from their massive feet, acacia trees silhouetted against the vibrant orange sky." },
+        { id: 42, cat: "Hewan", title: "Arctic Polar Bear Cub", prompt: "National Geographic style documentary shot of a majestic polar bear and her cub walking across a melting Arctic ice floe, crisp white snow, deep blue icy ocean waters, cinematic wildlife capture." },
+        { id: 43, cat: "Hewan", title: "Serengeti Lion Pride", prompt: "A pride of lions resting under the shade of an acacia tree in the golden grasslands of the Serengeti, lion cubs playing playfully in the dirt, cinematic wildlife documentary aesthetic." },
+        { id: 44, cat: "Hewan", title: "Humpback Whale Breach Ocean", prompt: "A colossal humpback whale breaching out of the deep blue ocean surface into the air, creating a massive splash of sparkling sea water drops under the bright midday sun, cinematic wildlife documentary style." },
+        { id: 45, cat: "Hewan", title: "Colorful Amazon Toucan", prompt: "A colorful toucan bird perched high in the lush Amazon rainforest canopy calling out, vibrant green foliage, misty morning atmosphere, documentary nature cinematography." },
+        { id: 46, cat: "Hewan", title: "Snow Leopard Himalayas", prompt: "An elusive snow leopard stealthily navigating steep rocky snowy ridges in the high Himalayas, sharp golden eyes scanning the valley below, BBC wildlife documentary quality." },
+        { id: 47, cat: "Hewan", title: "Cyberpunk Cat Neon Alley", prompt: "An adorable cyberpunk calico cat with a glowing cybernetic eye walking leisurely along a rainy Tokyo alleyway reflecting neon signs, puddle splashing raindrops, high-end 3D animation." },
+        { id: 48, cat: "Hewan", title: "Majestic Red Fox Snow", prompt: "A clever red fox running gracefully through pristine white winter snow in a pine forest, fluffy tail bouncing, soft snowflakes falling around it in cinematic slow motion." },
+        { id: 49, cat: "Hewan", title: "Sea Turtle Coral Reef", prompt: "A graceful green sea turtle swimming peacefully through a vibrant coral reef surrounded by colorful tropical fish, turquoise ocean sunbeams filtering from above." },
+        { id: 50, cat: "Hewan", title: "Majestic Eagle Soaring", prompt: "A fierce golden eagle soaring majestically across majestic mountain peaks, wings spread wide catching thermal wind currents, cinematic nature documentary." },
+
+        // --- POTRET (51-60) ---
+        { id: 51, cat: "Potret", title: "Cyberpunk Street Samurai Portrait", prompt: "Close-up cinematic portrait of a cybernetic street samurai with glowing facial tattoos and tactical visor, rain drops on face, neon lights reflecting in eyes, 8k photorealistic." },
+        { id: 52, cat: "Potret", title: "Victorian Lady Portrait", prompt: "An elegant 19th-century Victorian woman in a lace gown standing by a window in a manor house, soft morning sunlight illuminating her face, nostalgic cinematic portrait." },
+        { id: 53, cat: "Potret", title: "Elven Princess Fantasy", prompt: "A majestic elven princess with intricate silver tiara and glowing green eyes in an enchanted forest, ethereal lighting, photorealistic fantasy masterpiece." },
+        { id: 54, cat: "Potret", title: "Neon Cyberpunk Hacker Portrait", prompt: "A cyberpunk coder illuminated by neon blue and pink light from holographic code screens reflecting on skin, intense focused expression, cinematic portrait." },
+        { id: 55, cat: "Potret", title: "Old Wise Sailor Portrait", prompt: "A weathered old fisherman with a textured white beard and kind eyes looking out to sea, sunset golden hour rim light highlighting facial details, documentary portrait." },
+        { id: 56, cat: "Potret", title: "Renaissance Nobleman", prompt: "A Renaissance nobleman in velvet attire with gold embroidery posed in a dimly lit art gallery, dramatic Rembrandt lighting, classical oil painting aesthetic." },
+        { id: 57, cat: "Potret", title: "Astronaut Helmet Reflection", prompt: "Close-up portrait of an astronaut looking out into deep space, Earth reflecting in the curved glass visor of the helmet, cinematic sci-fi masterpiece." },
+        { id: 58, cat: "Potret", title: "Tribal Warrior Portrait", prompt: "A proud indigenous tribal warrior with intricate ceremonial face paint and feather adornments, dramatic sidelight, highly detailed documentary portrait photography." },
+        { id: 59, cat: "Potret", title: "Futuristic Android AI Face", prompt: "A sleek humanoid android face with translucent ceramic skin revealing glowing fiber-optic neural pathways beneath, cinematic studio lighting." },
+        { id: 60, cat: "Potret", title: "Steampunk Inventor Portrait", prompt: "A brilliant Victorian steampunk inventor wearing brass goggles and a leather apron in a workshop filled with gears and blueprints, warm nostalgic lighting." },
+
+        // --- KENDARAAN (61-70) ---
+        { id: 61, cat: "Kendaraan", title: "Formula 1 Night Race Speed", prompt: "High-speed panning shot of a Formula 1 racing car tearing around a wet street circuit under brilliant floodlights at night, sparks flying from the underbody scraping the tarmac." },
+        { id: 62, cat: "Kendaraan", title: "Sleek Electric Sports Car", prompt: "Sleek aerodynamic electric sports car driving fast along a scenic coastal highway at sunset, wheels spinning, glowing LED headlights cutting through twilight mist." },
+        { id: 63, cat: "Kendaraan", title: "Steampunk Airship Docking", prompt: "A massive Victorian steampunk airship slowly docking at a towering iron skyscraper station billowing steam, gear mechanisms turning, golden hour haze." },
+        { id: 64, cat: "Kendaraan", title: "Cyberpunk Lightcycle Chase", prompt: "Thrilling chase scene of a futuristic biker speeding through a neon-lit Tokyo highway on a sleek lightcycle, dynamic camera angles, rain splashing on camera lens." },
+        { id: 65, cat: "Kendaraan", title: "Vintage Hippie Camper Van", prompt: "A colorful 1960s hippie Volkswagen camper van painted with flower power psychedelic art parked on a sunny California beach, surfboard strapped on top, vintage film aesthetic." },
+        { id: 66, cat: "Kendaraan", title: "Futuristic Flying Police Speeder", prompt: "High-speed aerial pursuit of a rogue hacker flying car by glowing police interceptors weaving between mega-skyscrapers in a dystopian cyberpunk metropolis at night." },
+        { id: 67, cat: "Kendaraan", title: "Mars Rover Red Plains", prompt: "A sophisticated robotic rover traversing the barren red dust plains of Mars, camera panning to reveal a massive canyon and distant futuristic habitat dome." },
+        { id: 68, cat: "Kendaraan", title: "Retro Synthwave Sports Car", prompt: "A retro 1980s sports car driving down a glowing neon wireframe grid highway toward a giant retro sun on the horizon, palm tree silhouettes, synthwave aesthetic." },
+        { id: 69, cat: "Kendaraan", title: "Bullet Train Tokyo Fuji", prompt: "A sleek white Shinkansen bullet train speeding past Mount Fuji at sunset, cinematic motion blur, majestic Japanese landscape." },
+        { id: 70, cat: "Kendaraan", title: "Classic Steam Locomotive", prompt: "An antique steam locomotive roaring across a wooden bridge over a misty canyon, massive clouds of white steam billowing from the chimney, cinematic historical action." },
+
+        // --- ABSTRAK (71-80) ---
+        { id: 71, cat: "Abstrak", title: "Liquid Gold Flow Swirls", prompt: "Mesmerizing macro shot of molten liquid gold and iridescent obsidian ink swirling and mixing together in fluid motion, creating organic metallic abstract patterns, silky smooth 4k animation." },
+        { id: 72, cat: "Abstrak", title: "Neon Geometric Particle Vortex", prompt: "Endless swirling vortex of glowing neon geometric triangles and spheres morphing in zero gravity against a pitch-black void, futuristic abstract motion graphics art." },
+        { id: 73, cat: "Abstrak", title: "Cosmic Nebula Star Birth", prompt: "Abstract visualization of a cosmic star nursery nebula with swirling purple and teal interstellar dust clouds, exploding supernovas, and pulsing energy waves across the universe." },
+        { id: 74, cat: "Abstrak", title: "Chladni Sound Wave Vibration", prompt: "Scientific abstract art of glowing particles dancing and forming intricate symmetrical mandala patterns on a vibrating metallic plate driven by resonant sound frequencies." },
+        { id: 75, cat: "Abstrak", title: "Prismatic Glass Prism Refraction", prompt: "White light laser beam passing through rotating faceted crystal prisms, splitting into dazzling rainbows and prismatic geometric refractions bouncing across a dark minimalist space." },
+        { id: 76, cat: "Abstrak", title: "Digital Data Stream Matrix Flow", prompt: "Abstract stream of glowing green and blue binary code and financial data networks flowing in 3D space like a digital waterfall, high-tech cybersecurity abstract background." },
+        { id: 77, cat: "Abstrak", title: "Ferrofluid Magnetic Sculpture", prompt: "Macro close-up of dark metallic ferrofluid reacting to a powerful hidden neodymium magnet underneath, forming spiky organic metallic crystal structures that dance and morph smoothly." },
+        { id: 78, cat: "Abstrak", title: "Oil Water Colorful Droplets", prompt: "Vibrant macro abstract art of colorful oil droplets floating and colliding on a water surface, creating shifting iridescent rainbow soap bubble color gradients, hypnotic fluid dynamics." },
+        { id: 79, cat: "Abstrak", title: "Fractal Infinity Zoom Tunnel", prompt: "Endless hypnotic fractal zoom through infinitely repeating glowing golden geometric patterns and mandalas, sacred geometry animation, mesmerizing psychedelic visual art." },
+        { id: 80, cat: "Abstrak", title: "Minimalist Kinetic Sculpture", prompt: "An elegant minimalist kinetic sculpture with polished chrome metallic rings and spheres balancing and rotating smoothly in a pristine white art gallery, calm and sophisticated abstract motion." },
+
+        // --- ARSITEKTUR (81-90) ---
+        { id: 81, cat: "Arsitektur", title: "Futuristic Eco-City Towers", prompt: "Breathtaking cinematic drone shot of a futuristic eco-friendly vertical forest skyscraper city with cascading gardens, solar glass facades, and flying pedestrian sky-bridges." },
+        { id: 82, cat: "Arsitektur", title: "Ancient Mayan Pyramid Jungle", prompt: "Cinematic documentary drone shot revealing a moss-covered ancient Mayan pyramid temple slowly emerging from the dense green jungle canopy in Guatemala as morning mist clears." },
+        { id: 83, cat: "Arsitektur", title: "Gothic Cathedral Stained Glass", prompt: "Inside a majestic Gothic cathedral with towering vaulted ceilings, dramatic volumetric sunbeams streaming through massive colorful stained glass rose windows." },
+        { id: 84, cat: "Arsitektur", title: "Cyberpunk Vertical Megacity", prompt: "A towering vertical cyberpunk megacity in the year 3024 with holographic advertisements the size of skyscrapers, flying cars zipping through aerial traffic lanes." },
+        { id: 85, cat: "Arsitektur", title: "Modern Minimalist Glass Villa", prompt: "A luxurious modern minimalist concrete and glass cliffside villa overlooking the sparkling blue Aegean sea at sunset, warm interior lighting reflecting on water." },
+        { id: 86, cat: "Arsitektur", title: "Traditional Japanese Temple", prompt: "A serene traditional wooden Japanese temple surrounded by blooming red maple trees in Kyoto during autumn, glowing paper lanterns, peaceful Zen atmosphere." },
+        { id: 87, cat: "Arsitektur", title: "Grand European Royal Palace", prompt: "An opulent 18th-century European royal ballroom filled with crystal chandeliers, gold leaf moldings, and grand marble staircases, cinematic interior architecture." },
+        { id: 88, cat: "Arsitektur", title: "Mars Habitation Dome Base", prompt: "A futuristic modular Martian habitat dome base with pressurized airlocks and solar panel arrays set against the rugged red dust mountains of Mars." },
+        { id: 89, cat: "Arsitektur", title: "Greek Santorini Cliff Village", prompt: "Picturesque whitewashed cave houses and blue-domed churches clinging to the steep volcanic caldera cliffs of Santorini in Greece during golden hour sunset." },
+        { id: 90, cat: "Arsitektur", title: "Art Deco New York Skyscraper", prompt: "A majestic Art Deco skyscraper in 1930s New York City piercing through morning fog, intricate golden gargoyles and spires gleaming in the sunrise." },
+
+        // --- ANIMASI (91-100) ---
+        { id: 91, cat: "Animasi", title: "Pixar Cute Robot Companion", prompt: "A charming 3D animated cute little robot with big expressive glowing digital eyes sitting in a cozy cluttered workshop, tilting its head curiously as a butterfly lands on its metal finger, Pixar style." },
+        { id: 92, cat: "Animasi", title: "Studio Ghibli Flying Machine", prompt: "A whimsical hand-drawn anime style flying machine soaring through fluffy white Ghibli-esque clouds over a lush green countryside with winding rivers and a quaint European village." },
+        { id: 93, cat: "Animasi", title: "Cyberpunk Anime Hacker Action", prompt: "High-octane 2D/3D hybrid anime action shot of a cyberpunk hacker sprinting across neon rooftops in a futuristic Tokyo while dodging flying drones, dynamic sakuga animation style." },
+        { id: 94, cat: "Animasi", title: "Cute Forest Spirit Glow", prompt: "A fluffy adorable woodland creature with glowing mystical antlers walking through an enchanted forest, leaving a trail of glowing magical flowers behind its paws, 3D animated fairy tale." },
+        { id: 95, cat: "Animasi", title: "Mecha Robot Cockpit Launch", prompt: "A giant mecha robot pilot cockpit activating, screens lighting up with blue diagnostics, mechanical armor plating locking into place, cinematic 3D mecha anime opening sequence." },
+        { id: 96, cat: "Animasi", title: "Stylized Floating Island", prompt: "A gorgeous 3D stylized cartoon floating island with a tiny cozy cottage, a spinning windmill, and a small waterfall flowing into the clouds, vibrant colors, magical storybook animation." },
+        { id: 97, cat: "Animasi", title: "Cyberpunk Cat Neon Alley", prompt: "An adorable cyberpunk calico cat with a glowing cybernetic eye walking leisurely along a rainy Tokyo alleyway reflecting neon signs, puddle splashing raindrops, high-end 3D animation." },
+        { id: 98, cat: "Animasi", title: "Steampunk Clockwork Macro", prompt: "Intricate 3D animated macro view of giant golden brass clockwork gears, springs, and pendulums ticking and turning in perfect synchronization inside a giant cathedral clock tower." },
+        { id: 99, cat: "Animasi", title: "Cozy Anime Ramen Shop", prompt: "A cozy animated lofi ramen shop in Tokyo at night, steam rising from a hot bowl of ramen, rain drumming on the glass window, warm cozy interior lights, peaceful chill anime aesthetic." },
+        { id: 100, cat: "Animasi", title: "Magical Spellbook Rune Pages", prompt: "A magical ancient grimoire book resting on a wooden podium, its pages turning automatically as glowing golden rune letters fly out from the parchment into the air, 3D fantasy animation." }
+      ];
+
+      let currentCategory = "Semua";
+      let searchQuery = "";
+
+      const gridEl = document.getElementById('prompts-grid');
+      const searchInput = document.getElementById('search-input');
+      const filtersEl = document.getElementById('category-filters');
+      const counterEl = document.getElementById('result-counter');
+      const toastEl = document.getElementById('toast');
+      const toastMsgEl = document.getElementById('toast-msg');
+
+      function showToast(msg) {
+        toastMsgEl.textContent = msg;
+        toastEl.classList.remove('translate-y-32', 'opacity-0');
+        setTimeout(() => {
+          toastEl.classList.add('translate-y-32', 'opacity-0');
+        }, 2500);
+      }
+
+      function renderCategories() {
+        filtersEl.innerHTML = '';
+        CATEGORIES.forEach(cat => {
+          const btn = document.createElement('button');
+          const isSelected = currentCategory === cat;
+          btn.className = `px-4 py-2 rounded-xl text-xs font-semibold whitespace-nowrap transition-all cursor-pointer ${
+            isSelected 
+              ? 'bg-gradient-to-r from-indigo-600 to-purple-600 text-white shadow-lg shadow-indigo-500/25 ring-1 ring-indigo-400/40' 
+              : 'bg-slate-900/90 text-slate-300 hover:bg-slate-800 border border-slate-800'
+          }`;
+          btn.textContent = cat;
+          btn.onclick = () => {
+            currentCategory = cat;
+            renderCategories();
+            renderPrompts();
+          };
+          filtersEl.appendChild(btn);
+        });
+      }
+
+      function renderPrompts() {
+        const filtered = PROMPTS.filter(item => {
+          const matchesCat = currentCategory === "Semua" || item.cat === currentCategory;
+          const matchesSearch = item.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+                                item.prompt.toLowerCase().includes(searchQuery.toLowerCase()) ||
+                                item.cat.toLowerCase().includes(searchQuery.toLowerCase());
+          return matchesCat && matchesSearch;
+        });
+
+        counterEl.textContent = `Menampilkan ${filtered.length} prompt video AI`;
+
+        if (filtered.length === 0) {
+          gridEl.innerHTML = `
+            <div class="col-span-full text-center py-16 bg-slate-900/50 border border-slate-800 rounded-2xl">
+              <i class="fa-solid fa-triangle-exclamation text-3xl text-slate-500 mb-3"></i>
+              <p class="text-slate-300 font-medium">Tidak ada prompt yang ditemukan.</p>
+            </div>
+          `;
+          return;
+        }
+
+        gridEl.innerHTML = '';
+        filtered.forEach(item => {
+          const card = document.createElement('div');
+          card.className = "group bg-slate-900/60 hover:bg-slate-900 border border-slate-800/80 hover:border-indigo-500/50 rounded-2xl p-5 transition-all duration-300 hover:shadow-xl hover:shadow-indigo-500/10 flex flex-col justify-between";
+          
+          card.innerHTML = `
+            <div>
+              <div class="flex items-center justify-between mb-3">
+                <span class="px-2.5 py-1 rounded-lg bg-indigo-500/15 border border-indigo-500/30 text-indigo-300 text-[11px] font-bold">
+                  #${item.id < 10 ? '0' + item.id : item.id}
+                </span>
+                <span class="px-2.5 py-1 rounded-lg bg-slate-800 text-slate-300 text-[11px] font-medium">
+                  ${item.cat}
+                </span>
+              </div>
+              <h3 class="text-base font-bold text-white group-hover:text-indigo-300 transition-colors mb-2 line-clamp-1">
+                ${item.title}
+              </h3>
+              <div class="bg-slate-950/70 border border-slate-800/80 rounded-xl p-3.5 mb-4">
+                <p class="text-xs text-slate-300 line-clamp-3 font-mono leading-relaxed select-all">
+                  ${item.prompt}
+                </p>
+              </div>
+            </div>
+            <div class="flex items-center justify-end pt-3 border-t border-slate-800/80">
+              <button 
+                onclick="copyPrompt(this, \`${item.prompt.replace(/`/g, '\\`')}\`)"
+                class="copy-btn flex items-center gap-1.5 px-4 py-2 rounded-xl text-xs font-semibold bg-indigo-600 hover:bg-indigo-500 text-white shadow-md shadow-indigo-600/20 transition-all cursor-pointer"
+              >
+                <i class="fa-regular fa-copy"></i>
+                <span>Copy</span>
+              </button>
+            </div>
+          `;
+          gridEl.appendChild(card);
+        });
+      }
+
+      function copyPrompt(btn, text) {
+        navigator.clipboard.writeText(text);
+        showToast("Prompt berhasil disalin ke clipboard! 📋");
+        
+        const originalHTML = btn.innerHTML;
+        btn.innerHTML = `<i class="fa-solid fa-check"></i><span>Copied!</span>`;
+        btn.className = "flex items-center gap-1.5 px-4 py-2 rounded-xl text-xs font-semibold bg-emerald-600 text-white shadow-lg shadow-emerald-600/30 transition-all cursor-pointer";
+        
+        setTimeout(() => {
+          btn.innerHTML = originalHTML;
+          btn.className = "copy-btn flex items-center gap-1.5 px-4 py-2 rounded-xl text-xs font-semibold bg-indigo-600 hover:bg-indigo-500 text-white shadow-md shadow-indigo-600/20 transition-all cursor-pointer";
+        }, 2000);
+      }
+
+      searchInput.oninput = (e) => {
+        searchQuery = e.target.value;
+        renderPrompts();
+      };
+
+      renderCategories();
+      renderPrompts();
+
+      // Service Worker Registration
+      if ('serviceWorker' in navigator) {
+        window.addEventListener('load', () => {
+          navigator.serviceWorker.register('/sw.js')
+            .then(reg => console.log('ServiceWorker registered:', reg.scope))
+            .catch(err => console.log('ServiceWorker registration failed:', err));
+        });
+      }
+    </script>
+  </body>
+          </html>
